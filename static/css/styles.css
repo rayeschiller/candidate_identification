@@ -1,0 +1,17 @@
+.score-green {
+    background-color: #d4edda;
+    color: #155724;
+    border-radius: 5px;
+}
+
+.score-yellow {
+    background-color: #fff3cd;
+    color: #856404;
+    border-radius: 5px;
+}
+
+.score-red {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 5px;
+}
