@@ -1,3 +1,6 @@
+import os
+import tempfile
+
 from flask import Flask, render_template, jsonify, request
 import subprocess
 import json
@@ -41,27 +44,39 @@ def get_candidates():
 
 @app.route('/api/social_profiles', methods=['GET'])
 def get_social_profiles():
-    name = request.args.get('name')
+    name = request.args.get('name').lower()
     if not name:
         return jsonify({"error": "Name is required"}), 400
 
     try:
-        # Run sherlock for the given name
+        # Define the output file for the result
+        with tempfile.NamedTemporaryFile(suffix=".txt", delete=False, mode='w') as tmp_file:
+            output_file = tmp_file.name
+
+        # Run Sherlock to save the output
         result = subprocess.run(
-            ["sherlock", name, "--json"],
+            ["sherlock", name, "--site", "LinkedIn", "--output", output_file],
             capture_output=True,
             text=True
         )
 
-        # Check for errors
         if result.returncode != 0:
-            return jsonify({"error": result.stderr.strip()}), 500
+            return jsonify({"error": result.stdout.strip()}), 500
 
-        # Parse and return the results
-        profiles = json.loads(result.stdout.strip())
-        return jsonify(profiles)
+            # Parse the output file for the LinkedIn URL
+        platform_data = {}
+        with open(output_file, "r") as file:
+            for line in file:
+                line = line.strip()
+                if line.startswith("http"):  # Extract only lines with URLs
+                    platform_data["LinkedIn"] = line
+
+        os.remove(output_file)  # Clean up the temporary file
+        return jsonify(platform_data)
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == '__main__':

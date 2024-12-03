@@ -48,22 +48,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function fetchSocialProfiles(name, container) {
+        console.log('Fetching social profiles for:', name);
         container.innerHTML = '<img src="/static/spinner.gif" alt="Loading..." style="width: 24px; height: 24px;">';
         try {
             const response = await fetch(`/api/social_profiles?name=${encodeURIComponent(name)}`);
             const profiles = await response.json();
+            console.log('Profiles received:', profiles);
 
             if (profiles.error) {
                 container.innerHTML = `<p class="text-danger">${profiles.error}</p>`;
+            } else if (Object.keys(profiles).length === 0) {
+                container.innerHTML = `<p class="text-warning">No profiles found.</p>`;
             } else {
+                // Render platform as a label and hyperlink the full name
                 container.innerHTML = Object.entries(profiles)
-                    .map(([platform, details]) => `<a href="${details.url}" target="_blank">${platform}</a>`)
-                    .join('<br>');
+                    .map(([platform, url]) => `<strong>${platform}:</strong> <a href="${url}" target="_blank">${name}</a>`)
+                    .join('<br>'); // Join links with line breaks
             }
         } catch (error) {
             container.innerHTML = `<p class="text-danger">Error loading profiles: ${error.message}</p>`;
         }
     }
+
 
     async function loadCandidates() {
         voterList.innerHTML = '<p>Loading...</p>';
@@ -87,19 +93,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 voterDiv.className = 'score-card';
 
                 voterDiv.innerHTML = `
-                    <div class="d-flex align-items-center mb-3">
-                        <img src="${voter.photo}" alt="${voter.name}" class="rounded-circle me-3" width="50" height="50">
-                        <h5>${voter.name}</h5>
-                    </div>
-                   <div class="row">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="${voter.photo}" alt="${voter.name}" class="rounded-circle me-3" width="50" height="50">
+                    <h5>${voter.name}</h5>
+                </div>
+                 <div class="row">
                         <div class="col-md-4"><div class="p-2 ${getColorClass(voter.score)}">Overall Score: ${voter.score}</div></div>
                         <div class="col-md-4"><div class="p-2 ${getColorClass(voter.activist_score)}">Activist Score: ${voter.activist_score}</div></div>
                         <div class="col-md-4"><div class="p-2 ${getColorClass(voter.partisan_score)}">Partisan Score: ${voter.partisan_score}</div></div>
-                    </div>
-                    <div class="mt-3">Age: ${voter.age} | Years in Residence: ${voter.years_in_residence}</div>
-                    <button class="btn btn-primary mt-3" id="fetch-profile-${voter.name.replace(/\s+/g, '-')}">Load Social Profiles</button>
-                    <div id="profiles-${voter.name.replace(/\s+/g, '-')}" class="mt-3"></div>
-                `;
+                  </div>
+                <div class="mt-3">Age: ${voter.age} | Years in Residence: ${voter.years_in_residence}</div>
+                <button class="btn btn-primary mt-3" id="fetch-profile-${voter.name.replace(/\s+/g, '-')}">Load Social Profiles</button>
+                <div id="profiles-${voter.name.replace(/\s+/g, '-')}" class="mt-3"></div>
+            `;
 
                 voterList.appendChild(voterDiv);
 
@@ -108,13 +114,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const profileContainer = document.getElementById(`profiles-${voter.name.replace(/\s+/g, '-')}`);
 
                 profileButton.addEventListener('click', () => {
-                    fetchSocialProfiles(voter.name, profileContainer);
+                    const name = voter.name.replace(/\s+/g, ''); // Join first and last names
+                    fetchSocialProfiles(name, profileContainer);
                 });
             });
         } catch (error) {
             voterList.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
         }
     }
+
 
     await loadRegions();
     document.getElementById('load-button').addEventListener('click', loadCandidates);
