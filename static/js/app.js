@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const voterList = document.getElementById('voter-list');
 
     const getColorClass = (score) => {
-        if (score > 90) return 'score-green';
+        if (score > 80) return 'score-green';
         if (score >= 60) return 'score-yellow';
         return 'score-red';
     };
@@ -98,9 +98,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h5>${voter.name}</h5>
                 </div>
                  <div class="row">
-                        <div class="col-md-4"><div class="p-2 ${getColorClass(voter.score)}">Overall Score: ${voter.score}</div></div>
-                        <div class="col-md-4"><div class="p-2 ${getColorClass(voter.activist_score)}">Activist Score: ${voter.activist_score}</div></div>
-                        <div class="col-md-4"><div class="p-2 ${getColorClass(voter.partisan_score)}">Partisan Score: ${voter.partisan_score}</div></div>
+                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.score)}">Overall Score: ${voter.score}</div></div>
+                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.activist_score)}">Activist Score: ${voter.activist_score}</div></div>
+                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.partisan_score)}">Partisan Score: ${voter.partisan_score}</div></div>
+                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.local_voter_score)}">Local Voter Score: ${voter.local_voter_score}</div></div>
                   </div>
                 <div class="mt-3">Age: ${voter.age} | Years in Residence: ${voter.years_in_residence}</div>
                 <button class="btn btn-primary mt-3" id="fetch-profile-${voter.name.replace(/\s+/g, '-')}">Load Social Profiles</button>
