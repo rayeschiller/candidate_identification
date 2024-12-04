@@ -93,19 +93,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 voterDiv.className = 'score-card';
 
                 voterDiv.innerHTML = `
-                <div class="d-flex align-items-center mb-3">
-                    <img src="${voter.photo}" alt="${voter.name}" class="rounded-circle me-3" width="50" height="50">
-                    <h5>${voter.name}</h5>
-                </div>
-                 <div class="row">
-                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.score)}">Overall Score: ${voter.score}</div></div>
-                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.activist_score)}">Activist Score: ${voter.activist_score}</div></div>
-                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.partisan_score)}">Partisan Score: ${voter.partisan_score}</div></div>
-                        <div class="col-md-3"><div class="p-2 ${getColorClass(voter.local_voter_score)}">Local Voter Score: ${voter.local_voter_score}</div></div>
-                  </div>
-                <div class="mt-3">Age: ${voter.age} | Years in Residence: ${voter.years_in_residence}</div>
-                <button class="btn btn-primary mt-3" id="fetch-profile-${voter.name.replace(/\s+/g, '-')}">Load Social Profiles</button>
-                <div id="profiles-${voter.name.replace(/\s+/g, '-')}" class="mt-3"></div>
+            <div class="d-flex align-items-center mb-3">
+    <!-- Picture and Name in One Section -->
+    <div class="d-flex align-items-center me-3">
+        <img src="${voter.photo}" alt="${voter.name}" class="rounded-circle" width="50" height="50">
+        <h5 class="ms-3 mb-0">${voter.name}</h5>
+    </div>
+    <!-- Overall Score in Another Section -->
+    <div>
+        <span class="fs-4 fw-bold p-1 custom-rounded ${getColorClass(voter.score)}">Overall Score: ${voter.score}</span>
+    </div>
+</div>
+
+            <div class="row">
+                <div class="col-md-4"><div class="p-2 ${getColorClass(voter.activist_score)}">Activist Score: ${voter.activist_score}</div></div>
+                <div class="col-md-4"><div class="p-2 ${getColorClass(voter.partisan_score)}">Partisan Score: ${voter.partisan_score}</div></div>
+                <div class="col-md-4"><div class="p-2 ${getColorClass(voter.local_voter_score)}">Local Voter Score: ${voter.local_voter_score}</div></div>
+            </div>
+            <div class="mt-3">Age: ${voter.age} | Years in Residence: ${voter.years_in_residence}</div>
+            <button class="btn btn-secondary mt-3" id="fetch-profile-${voter.name.replace(/\s+/g, '-')}">Load Social Profiles</button>
+            <div id="profiles-${voter.name.replace(/\s+/g, '-')}" class="mt-3"></div>
             `;
 
                 voterList.appendChild(voterDiv);

@@ -41,7 +41,7 @@ def get_data():
     # Calculate composite score
     data["composite_score"] = sum(
         data[f"norm_{col}"] * weight for col, weight in columns.items()
-    )
+    ) * 100
 
     # Define the input columns and composite score
     input_columns = [

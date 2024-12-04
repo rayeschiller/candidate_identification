@@ -15,3 +15,8 @@
     color: #721c24;
     border-radius: 5px;
 }
+
+.custom-rounded {
+    border-radius: 8px; /* Adjust to your liking */
+    padding: 4px; /* Optional to fine-tune padding */
+}
